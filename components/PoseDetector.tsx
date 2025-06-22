@@ -73,14 +73,41 @@ const PoseDetector: React.FC = () => {
             const { drawConnectors, drawLandmarks } = await import('@mediapipe/drawing_utils');
             const { POSE_CONNECTIONS } = await import('@mediapipe/pose');
 
-            drawConnectors(ctx, landmarks, POSE_CONNECTIONS, {
+            // Filter out arm connections to avoid overlap with hand detection
+            const bodyConnections = POSE_CONNECTIONS.filter(connection => {
+                const [start, end] = connection;
+                // Exclude arm connections (wrist to elbow, elbow to shoulder for hands)
+                // Keep: shoulders, torso, hips, legs, face
+                const armPoints = [15, 16, 17, 18, 19, 20, 21, 22]; // wrist and hand points
+                return !armPoints.includes(start) && !armPoints.includes(end);
+            });
+
+            // Draw body connections (excluding arms)
+            drawConnectors(ctx, landmarks, bodyConnections, {
                 color: '#00FF00',
                 lineWidth: 4
             });
-            drawLandmarks(ctx, landmarks, {
+
+            // Draw all landmarks except hand/wrist points
+            const bodyLandmarks = landmarks.filter((_, index) => {
+                const handWristPoints = [15, 16, 17, 18, 19, 20, 21, 22]; // exclude wrist and hand points
+                return !handWristPoints.includes(index);
+            });
+
+            drawLandmarks(ctx, bodyLandmarks, {
                 color: '#FF0000',
                 lineWidth: 2,
                 radius: 6
+            });
+
+            // Draw shoulder and elbow landmarks in a different color to show arm structure
+            const armJoints = [11, 12, 13, 14]; // left/right shoulder and elbow
+            const armLandmarksToShow = landmarks.filter((_, index) => armJoints.includes(index));
+
+            drawLandmarks(ctx, armLandmarksToShow, {
+                color: '#00FFFF', // Cyan for arm joints
+                lineWidth: 2,
+                radius: 8
             });
         };
 
