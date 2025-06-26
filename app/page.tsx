@@ -5,6 +5,7 @@ import ARMirrorApp from "@/components/ArMirrorApp";
 import AvatarTestPage from '@/components/AvatarTestPage';
 import OptimizedARMirror from "@/components/OptimizedARMirror";
 import SnapchatARFilter from "@/components/SnapchatARFilter";
+import { ModelAvatarFilter } from "@/components/ModelAvatarFilter";
 
 export const metadata: Metadata = {
   title: "Pose Detection",
@@ -14,5 +15,5 @@ export const metadata: Metadata = {
 
 
 export default function Home() {
-  return <SnapchatARFilter />;
+  return <ModelAvatarFilter />;
 }
