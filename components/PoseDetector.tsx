@@ -41,8 +41,8 @@ const PoseDetector: React.FC<PoseDetectorProps> = ({
     onHandsDetected,
     onPersonDetected,
     showVideo = true,
-    width = 640,
-    height = 480,
+    width = 1600,
+    height = 800,
     className = ""
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
